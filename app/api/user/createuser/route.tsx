@@ -1,10 +1,9 @@
 import User from "../../../../model/user.model"; // Corrected import path
-import { dbConnect } from "../../../../utils/dbConnect"; // Import the database connection utility
+import dbConnect  from "../../../../utils/dbConnect"; // Import the database connection utility
 import dotenv from "dotenv";
 
 dotenv.config();
-
-export async function POST(req: Request, res: Response) {
+export async function POST(req: Request) {
   try {
     // Connect to the database
     await dbConnect();
