@@ -1,6 +1,6 @@
+import User from "@/model/user.model";
 
-
-export default async function subscribeUser(req, res) {
+export default async function subscribeUser(req:any, res:any) {
     try {
       const updateUser = await User.findByIdAndUpdate(req.user.id, {
         isSubscribed: true,

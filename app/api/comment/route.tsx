@@ -1,5 +1,7 @@
-const { Article } = require("../Models/article.model");
-const { Comment } = require("../Models/comment.model");
+
+import Comment from "@/model/comment.model";
+import Article from "@/model/article.model";
+
 
 export default async function CreateComment(req:any, res:any) {
   try {

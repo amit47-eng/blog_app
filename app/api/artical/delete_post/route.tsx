@@ -1,6 +1,7 @@
-import { User ,Articale } from "module";
+import  User  from "@/model/user.model";
+import Article  from "@/model/article.model";
 
-export default async function DeletePostById(req, res) {
+export default async function DeletePostById(req:any, res:any) {
 
     let { id } = req.user;
     let { postId } = req.params;
