@@ -1,5 +1,5 @@
-import { NextResponse } from "next/server";
-import { Article } from "../../../../model/article.model";
+import  NextResponse from "next/server";
+import Article  from "@/model/article.model";
 import mongoose from "mongoose";
 
 // Utility function to connect to the database
