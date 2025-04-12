@@ -14,10 +14,10 @@ export default function PostsPage() {
           method: "GET",
         });
         if (!res.ok) {
-          throw new Error("Failed to fetch posts");
+          throw new Error("Failed to fetch post");
         }
         const data = await res.json();
-        setPosts(data.response || []);
+        setPosts(data.articles || []); // Updated to use 'articles' field
       } catch (err) {
         setError(err.message || "Failed to fetch posts");
       }

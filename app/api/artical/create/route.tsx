@@ -1,5 +1,5 @@
-import  NextResponse from "next/server";
-import Article  from "@/model/article.model";
+import { NextResponse } from "next/server"; // Corrected import
+import Article from "@/model/article.model";
 import mongoose from "mongoose";
 
 // Utility function to connect to the database
@@ -8,8 +8,7 @@ async function connectToDatabase() {
     try {
       console.log("Connecting to the database...");
       await mongoose.connect(process.env.MONGO_URI || "", {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
+        // Removed deprecated options
       });
       console.log("Database connection established.");
     } catch (error) {
