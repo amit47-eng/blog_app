@@ -1,16 +1,29 @@
-import  User  from "@/model/user.model";
-import Article  from "@/model/article.model";
+import { NextRequest, NextResponse } from "next/server";
+import User from "@/model/user.model";
+import Article from "@/model/article.model";
 
-export default async function DeletePostById(req:any, res:any) {
+export async function DELETE(req: NextRequest) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const postId = searchParams.get("postId");
+    const userId = searchParams.get("userId");
 
-    let { id } = req.user;
-    let { postId } = req.params;
-    let user = await User.findOne({ _id: id });
-    if(!user.article.includes(postId)){
-      return res.status(400).json({Message: "You are not authorized to delete this post"})
+    if (!postId || !userId) {
+      return NextResponse.json({ message: "Missing postId or userId" }, { status: 400 });
     }
-    Article.findOne
-    let post = await Article.findOneAndDelete({ _id: postId });
-   
-  
+
+    const user = await User.findOne({ _id: userId });
+    if (!user || !user.article.includes(postId)) {
+      return NextResponse.json({ message: "You are not authorized to delete this post" }, { status: 400 });
+    }
+
+    const post = await Article.findOneAndDelete({ _id: postId });
+    if (!post) {
+      return NextResponse.json({ message: "Post not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({ message: "Post deleted successfully" }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ message: "Internal Server Error", error: error.message }, { status: 500 });
   }
+}
