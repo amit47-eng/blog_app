@@ -1,5 +1,7 @@
+import { NextApiRequest, NextApiResponse } from "next";
 import User from "../../../../model/user.model"; 
-export default function DeleteUser(req:any, res:any) {
+
+export default function DeleteUser(req: NextApiRequest, res: NextApiResponse) {
     let useremail = req.body.email;
     User.deleteMany({ email: useremail })
         .then((response:any) => {

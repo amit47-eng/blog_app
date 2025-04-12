@@ -1,6 +1,7 @@
+import { NextApiRequest, NextApiResponse } from "next";
 import User from "@/model/user.model";
 
-export default function getUserById(req:any, res:any) {
+export default function getUserById(req: NextApiRequest, res: NextApiResponse) {
     let { id } = req.params;
     User.findOne({ _id: id })
       .then((response:any) => {
