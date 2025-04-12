@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import User from "../../../../model/user.model";
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async (req: NextApiRequest, res: NextApiResponse) => {
     let useremail = req.body.email;
     User.deleteMany({ email: useremail })
         .then((response: any) => {
@@ -11,4 +11,4 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
             console.error(err); // Log the error properly
             res.status(500).json({ message: "Something's wrong", error: err });
         });
-}
+};
