@@ -7,6 +7,7 @@ export default function SignupPage() {
   const [formData, setFormData] = useState({
     firstname: "",
     lastname: "",
+    about: "",
     email: "",
     password: "",
     username: "",
@@ -56,6 +57,15 @@ export default function SignupPage() {
           name="lastname"
           placeholder="Last Name"
           value={formData.lastname}
+          onChange={handleChange}
+          className="border p-2"
+          required
+        />
+        <input
+          type="text"
+          name="about"
+          placeholder="About"
+          value={formData.about}
           onChange={handleChange}
           className="border p-2"
           required
