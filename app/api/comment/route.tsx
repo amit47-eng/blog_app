@@ -1,23 +1,35 @@
-
+import { NextRequest, NextResponse } from "next/server";
 import Comment from "@/model/comment.model";
 import Article from "@/model/article.model";
 
-
-export default async function CreateComment(req:any, res:any) {
+export async function POST(req: NextRequest) {
   try {
-    const comment = await Comment.create(req.body);
+    const body = await req.json(); // Parse the request body
+    const comment = await Comment.create(body);
+
     if (comment) {
-      let post = await Article.findOne({ _id: comment.article });
+      const post = await Article.findOne({ _id: comment.article });
+      if (!post) {
+        return NextResponse.json({ message: "Article not found" }, { status: 404 });
+      }
+
       post.comments.push(comment._id);
       await post.save();
-      res.status(201).json({
-        Message: "Comment is created Successfully!",
-        response: comment,
-      });
+
+      return NextResponse.json(
+        {
+          message: "Comment is created successfully!",
+          response: comment,
+        },
+        { status: 201 }
+      );
     }
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ Message: "Something went wrong!", error: error });
+    console.error(error);
+    return NextResponse.json(
+      { message: "Something went wrong!", error: error.message },
+      { status: 500 }
+    );
   }
 }
 
