@@ -19,7 +19,8 @@ export default function PostsPage() {
         const data = await res.json();
         setPosts(data.articles || []); // Updated to use 'articles' field
       } catch (err) {
-        setError(err.message || "Failed to fetch posts");
+        const error = err as Error;
+        setError(error.message || "Failed to fetch posts");
       }
     }
     fetchPosts();
@@ -41,7 +42,8 @@ export default function PostsPage() {
       setPosts([...posts, data.article]);
       setNewPost({ title: "", description: "", tags: "lifestyle" });
     } catch (err) {
-      setError(err.message || "Something went wrong");
+      const error = err as Error; // ✅ Type assertion
+      setError(error.message || "Something went wrong");
     }
   };
 
