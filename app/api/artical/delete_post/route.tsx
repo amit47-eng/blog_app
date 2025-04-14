@@ -24,6 +24,8 @@ export async function DELETE(req: NextRequest) {
 
     return NextResponse.json({ message: "Post deleted successfully" }, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ message: "Internal Server Error", error: error.message }, { status: 500 });
+    const err = error as Error; // 👈 Type assertion
+    return NextResponse.json({ message: "Internal Server Error", error: err.message }, { status: 500 });
   }
+  
 }
