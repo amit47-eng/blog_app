@@ -25,9 +25,10 @@ export async function POST(req: NextRequest) {
       );
     }
   } catch (error) {
-    console.error(error);
+    const err = error as Error; // Type assertion to fix the error
+    console.error(err);
     return NextResponse.json(
-      { message: "Something went wrong!", error: error.message },
+      { message: "Something went wrong!", error: err.message },
       { status: 500 }
     );
   }
