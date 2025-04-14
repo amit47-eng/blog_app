@@ -1,14 +1,28 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextRequest, NextResponse } from "next/server";
 import User from "../../../../model/user.model";
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
-    let useremail = req.body.email;
-    User.deleteMany({ email: useremail })
-        .then((response: any) => {
-            res.status(200).json({ message: "Users deleted successfully", response: response });
-        })
-        .catch((err: any) => {
-            console.error(err); // Log the error properly
-            res.status(500).json({ message: "Something's wrong", error: err });
+export async function DELETE(req: NextRequest) {
+    try {
+        const { email: useremail } = await req.json();
+
+        if (!useremail) {
+            return NextResponse.json(
+                { message: "Email is required" },
+                { status: 400 }
+            );
+        }
+
+        const response = await User.deleteMany({ email: useremail });
+
+        return NextResponse.json({
+            message: "Users deleted successfully",
+            response,
         });
-};
+    } catch (err: any) {
+        console.error("Error deleting users:", err);
+        return NextResponse.json(
+            { message: "Internal Server Error", error: err.message },
+            { status: 500 }
+        );
+    }
+}

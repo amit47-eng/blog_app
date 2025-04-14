@@ -1,16 +1,36 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextRequest, NextResponse } from "next/server";
 import User from "@/model/user.model";
 
-export default function getUserById(req: NextApiRequest, res: NextApiResponse) {
-    let { id } = req.params;
-    User.findOne({ _id: id })
-      .then((response:any) => {
-        res.status(200).json({
-          Message: "User is fetched!! Successfully!",
-          response: response,
+export async function GET(req: NextRequest) {
+    try {
+        const { searchParams } = new URL(req.url);
+        const id = searchParams.get("id");
+
+        if (!id) {
+            return NextResponse.json(
+                { message: "User ID is required" },
+                { status: 400 }
+            );
+        }
+
+        const response = await User.findOne({ _id: id });
+
+        if (!response) {
+            return NextResponse.json(
+                { message: "User not found" },
+                { status: 404 }
+            );
+        }
+
+        return NextResponse.json({
+            message: "User fetched successfully",
+            response,
         });
-      })
-      .catch((error:any) => {
-        res.status(500).json({ Message: "Something went wrong", error: error });
-      });
-  }
+    } catch (error: any) {
+        console.error("Error fetching user by ID:", error);
+        return NextResponse.json(
+            { message: "Internal Server Error", error: error.message },
+            { status: 500 }
+        );
+    }
+}

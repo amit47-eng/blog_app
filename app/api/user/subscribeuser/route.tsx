@@ -1,16 +1,34 @@
+import { NextRequest, NextResponse } from "next/server";
 import User from "@/model/user.model";
 
-export default async function subscribeUser(req:any, res:any) {
+export async function PATCH(req: NextRequest) {
     try {
-      const updateUser = await User.findByIdAndUpdate(req.user.id, {
-        isSubscribed: true,
-      });
-      if (!updateUser) {
-        return res.status(404).json({ Message: "Page not found!" });
-      }
-      res.status(200).json({ Message: "User is Subscribed" });
-    } catch (err) {
-      res.status(500).json({ Message: "Something went wrong", error: error });
+        const { id } = await req.json();
+
+        if (!id) {
+            return NextResponse.json(
+                { message: "User ID is required" },
+                { status: 400 }
+            );
+        }
+
+        const updateUser = await User.findByIdAndUpdate(id, {
+            isSubscribed: true,
+        });
+
+        if (!updateUser) {
+            return NextResponse.json(
+                { message: "User not found" },
+                { status: 404 }
+            );
+        }
+
+        return NextResponse.json({ message: "User is subscribed" });
+    } catch (err: any) {
+        console.error("Error subscribing user:", err);
+        return NextResponse.json(
+            { message: "Internal Server Error", error: err.message },
+            { status: 500 }
+        );
     }
-  }
-  
+}
