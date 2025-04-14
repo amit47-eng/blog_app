@@ -3,7 +3,13 @@
 import { useState, useEffect } from "react";
 
 export default function PostsPage() {
-  const [posts, setPosts] = useState([]);
+  type Post = {
+    _id: string;
+    title: string;
+    description: string;
+    tags: string;
+  };
+  const [posts, setPosts] = useState<Post[]>([]);
   const [newPost, setNewPost] = useState({ title: "", description: "", tags: "lifestyle" });
   const [error, setError] = useState("");
 
