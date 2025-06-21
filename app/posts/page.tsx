@@ -5,12 +5,22 @@ type Post = {
   id: string;
   article_title: string;
   article_description: string;
-  tags: string;
+  tags: string[]; // <-- should be an array for multi-tag support
+  summary?: string;
+  content?: string;
+  article_image_url?: string;
 };
 
 export default function PostsPage() {
   const [posts, setPosts] = useState<Post[]>([]);
-  const [newPost, setNewPost] = useState({
+  const [newPost, setNewPost] = useState<{
+    title: string;
+    description: string;
+    tags: string[];
+    content: string;
+    summary: string;
+    article_image_url: string;
+  }>({
     title: "",
     description: "",
     tags: [], // allow multiple tags
@@ -33,7 +43,10 @@ export default function PostsPage() {
           id: a.id || a._id,
           article_title: a.article_title,
           article_description: a.article_description,
-          tags: a.tags,
+          tags: Array.isArray(a.tags) ? a.tags : (typeof a.tags === 'string' ? a.tags.split(',').map((t: string) => t.trim()) : []),
+          summary: a.summary,
+          content: a.content,
+          article_image_url: a.article_image_url,
         }));
         setPosts(articles);
       } catch (e: any) {
@@ -66,7 +79,10 @@ export default function PostsPage() {
         id: article.id || article._id,
         article_title: article.article_title,
         article_description: article.article_description,
-        tags: Array.isArray(article.tags) ? article.tags.join(", ") : article.tags,
+        tags: Array.isArray(article.tags) ? article.tags : (typeof article.tags === 'string' ? article.tags.split(',').map((t: string) => t.trim()) : []),
+        summary: article.summary,
+        content: article.content,
+        article_image_url: article.article_image_url,
       };
       setPosts(prev => [...prev, created]);
       setNewPost({ title: "", description: "", tags: [], content: "", summary: "", article_image_url: "" });
@@ -195,11 +211,7 @@ export default function PostsPage() {
                         {tag}
                       </span>
                     ))
-                  : (
-                      <span className="inline-block bg-gradient-to-r from-fuchsia-100 via-purple-100 to-blue-100 text-fuchsia-700 px-4 py-1 rounded-full text-xs font-semibold shadow">
-                        {post.tags}
-                      </span>
-                    )}
+                  : null}
               </div>
               {/* Show summary if available */}
               {post.summary && (
