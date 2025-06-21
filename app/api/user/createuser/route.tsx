@@ -1,5 +1,5 @@
-import User from "../../../../model/user.model"; // Corrected import path
-import dbConnect  from "../../../../utils/dbConnect"; // Import the database connection utility
+import User from "../../../../model/user.model"; 
+import dbConnect  from "../../../../utils/dbConnect"; 
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -12,8 +12,13 @@ export async function POST(req: Request) {
     const body = await req.json();
 
     // Validate required fields
-    const requiredFields = ["firstname", "lastname", "about", "email", "password", "username", "phoneNumber"];
+    const requiredFields = ["firstname", "lastname", "about", "password", "username"];
     const missingFields = requiredFields.filter((field) => !body[field]);
+
+    // User must provide at least email or phoneNumber
+    if (!body.email && !body.phoneNumber) {
+      missingFields.push("email or phoneNumber");
+    }
 
     if (missingFields.length > 0) {
       return new Response(

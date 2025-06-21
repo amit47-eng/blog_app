@@ -1,5 +1,16 @@
-import mongoose, { Document, Schema } from "mongoose"
-const articleSchema = new mongoose.Schema(
+import mongoose, { Schema, Document } from "mongoose";
+
+export interface IArticle extends Document {
+  article_title: string;
+  article_description: string;
+  user: mongoose.Types.ObjectId;
+  article_image_url?: string;
+  tags: string[]; // Allow any tags
+  content?: string; // Add a content field for longer text
+  summary?: string; // Optional summary
+}
+
+const articleSchema = new Schema<IArticle>(
   {
     article_title: {
       type: String,
@@ -9,25 +20,46 @@ const articleSchema = new mongoose.Schema(
       type: String,
       minLength: 10,
       maxLength: 200,
-      required: [true, "Kindly Provide the Article Description"],
+      required: [true, "Kindly provide the Article Description"],
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
+      required: true,
     },
     article_image_url: {
       type: String,
       default: "",
     },
     tags: {
+      type: [String], // Array of strings, any tag
+      default: [],
+    },
+    content: {
       type: String,
-      enum: ["lifestyle", "tech", "food"],
-      required: true,
-      default: "lifestyle",
+      default: "",
+    },
+    summary: {
+      type: String,
+      default: "",
     },
   },
   { timestamps: true }
 );
 
-const Article = mongoose.models.Article || mongoose.model("Article", articleSchema);
-export default  Article ;
+// Optional index to speed up queries by user
+articleSchema.index({ user: 1 });
+
+// Clean up JSON output
+articleSchema.set("toJSON", {
+  transform: (_doc, ret) => {
+    ret.id = ret._id;
+    delete ret._id;
+    delete ret.__v;
+  },
+});
+
+const Article =
+  mongoose.models.Article ||
+  mongoose.model<IArticle>("Article", articleSchema);
+export default Article;

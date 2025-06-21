@@ -8,13 +8,19 @@ export async function POST(req: NextRequest) {
   try {
     await dbConnect(); // Ensure database is connected
 
-    let { email, password } = await req.json(); // Parse JSON body
+    let { email, phoneNumber, password } = await req.json(); // Parse JSON body
 
     if (!process.env.JWT_SECRET) {
       return NextResponse.json({ message: "JWT_SECRET is not defined in environment variables" }, { status: 500 });
     }
 
-    let user = await User.findOne({ email: email });
+    // Allow login with either email or phoneNumber
+    let user = null;
+    if (email) {
+      user = await User.findOne({ email: email });
+    } else if (phoneNumber) {
+      user = await User.findOne({ phoneNumber: phoneNumber });
+    }
 
     if (!user) {
       return NextResponse.json({ message: "User does not exist, please register" }, { status: 401 });

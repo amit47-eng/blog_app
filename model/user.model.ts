@@ -60,7 +60,7 @@ const userSchema = new mongoose.Schema<IUser>(
     email: {
       type: String,
       lowercase: true,
-      required: [true, "Please enter the email of the user"],
+      required: [true, "Please enter the email or phone number of the user"],
       unique: true,
       match: [
         /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
@@ -86,13 +86,15 @@ const userSchema = new mongoose.Schema<IUser>(
     avatar: { type: String, default: "" },
     dob: { type: Date },
     phoneNumber: {
-      required: [true, "Kindly give the phone number"],
       type: String,
+      unique: true,
+      sparse: true, // allow multiple docs with null/undefined
       minLength: 10,
       match: [
         /^\(?\+?[0-9]*\)?[-.\s]?[0-9]+[-.\s]?[0-9]+$/,
         "Please provide a valid phone number",
       ],
+      required: false,
     },
     article: [{ type: mongoose.Schema.Types.ObjectId, ref: "Article" }],
     communication_address: communicationSchema,
