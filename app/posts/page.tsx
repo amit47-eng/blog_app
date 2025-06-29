@@ -20,7 +20,7 @@ interface Like {
 }
 interface Comment {
   _id: string;
-  user: string;
+  user: string | { _id: string; username: string }; // <-- allow populated user
   content: string;
   createdAt: string;
 }
