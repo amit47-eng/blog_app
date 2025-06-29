@@ -20,6 +20,15 @@ export async function POST(req: Request) {
       missingFields.push("email or phoneNumber");
     }
 
+    // Remove empty phoneNumber if not provided
+    if (body.phoneNumber === "") {
+      delete body.phoneNumber;
+    }
+    // Remove empty email if not provided
+    if (body.email === "") {
+      delete body.email;
+    }
+
     if (missingFields.length > 0) {
       return new Response(
         JSON.stringify({
@@ -30,6 +39,27 @@ export async function POST(req: Request) {
       );
     }
 
+    // --- Duplicate check ---
+    if (body.email) {
+      const existingEmail = await User.findOne({ email: body.email });
+      if (existingEmail) {
+        return new Response(
+          JSON.stringify({ message: "Email already exists" }),
+          { status: 409 }
+        );
+      }
+    }
+    if (body.phoneNumber) {
+      const existingPhone = await User.findOne({ phoneNumber: body.phoneNumber });
+      if (existingPhone) {
+        return new Response(
+          JSON.stringify({ message: "Phone number already exists" }),
+          { status: 409 }
+        );
+      }
+    }
+    // --- End duplicate check ---
+
     // Create the user
     const response = await User.create(body);
     return new Response(
@@ -38,6 +68,16 @@ export async function POST(req: Request) {
     );
   } catch (error: any) {
     console.error("Error creating user:", error); // Log full error
+    // Handle duplicate key error from MongoDB
+    if (error.code === 11000) {
+      const field = Object.keys(error.keyPattern)[0];
+      return new Response(
+        JSON.stringify({
+          message: `A user with this ${field} already exists.`,
+        }),
+        { status: 409 }
+      );
+    }
     return new Response(
       JSON.stringify({
         message: "Something went wrong while creating user",

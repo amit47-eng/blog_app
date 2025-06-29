@@ -23,8 +23,8 @@ export async function GET() {
 
     await connectToDatabase();
 
-    // Fetch articles without populating 'comments'
-    const articles = await Article.find();
+    // Fetch articles and populate 'user' with username
+    const articles = await Article.find().populate("user", "username");
 
     console.log("Articles fetched successfully:", articles);
 

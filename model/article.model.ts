@@ -8,6 +8,7 @@ export interface IArticle extends Document {
   tags: string[]; // Allow any tags
   content?: string; // Add a content field for longer text
   summary?: string; // Optional summary
+  comments?: mongoose.Types.ObjectId[]; // Add comments field
 }
 
 const articleSchema = new Schema<IArticle>(
@@ -43,6 +44,7 @@ const articleSchema = new Schema<IArticle>(
       type: String,
       default: "",
     },
+    comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment", default: [] }], // Comments array
   },
   { timestamps: true }
 );

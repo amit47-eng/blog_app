@@ -8,8 +8,8 @@ export default function Home() {
   const [isSignup, setIsSignup] = useState(false); // State to toggle between Login and Signup
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-200 via-purple-200 to-blue-200 px-2">
-      <div className="w-full max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl p-4 md:p-8 bg-white/60 rounded-2xl shadow-2xl shadow-black/40 backdrop-blur-lg">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-blue-900 to-blue-700 px-2">
+      <div className="w-full max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl p-4 md:p-8 bg-black/70 rounded-2xl shadow-2xl shadow-blue-900/60 backdrop-blur-lg">
         {isSignup ? (
           <>
             <SignupPage />
@@ -17,7 +17,7 @@ export default function Home() {
               Already have an account?{" "}
               <button
                 onClick={() => setIsSignup(false)}
-                className="text-blue-500 underline hover:text-blue-700 transition"
+                className="text-blue-400 underline hover:text-blue-600 transition"
               >
                 Back to Login
               </button>
@@ -30,7 +30,7 @@ export default function Home() {
               New user?{" "}
               <button
                 onClick={() => setIsSignup(true)}
-                className="text-blue-500 underline hover:text-blue-700 transition"
+                className="text-blue-400 underline hover:text-blue-600 transition"
               >
                 Sign Up
               </button>
